@@ -1,7 +1,3 @@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// IT IS RUNNING IN THE SERVER!!!
-// 这段代码发生在server!
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 import type { ActionFunction } from "remix";
 import { useActionData, redirect, json } from "remix";
 

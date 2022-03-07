@@ -1,4 +1,3 @@
-import type { User } from "@prisma/client";
 import type { LinksFunction, LoaderFunction } from "remix";
 import { Link, Outlet, useLoaderData } from "remix";
 

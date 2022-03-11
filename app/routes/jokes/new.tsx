@@ -78,7 +78,7 @@ export const action: ActionFunction = async ({
     return badRequest({ fieldErrors, fields });
   }
 
-  const joke = await db.joke.create({
+  const joke = await db.jokes.create({
     data: { ...fields, jokesterId: userId },
   });
   return redirect(`/jokes/${joke.id}`);

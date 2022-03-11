@@ -1,15 +1,15 @@
 import type { LoaderFunction } from "remix";
 import { json, useLoaderData, Link, useCatch } from "remix";
-import type { Joke } from "@prisma/client";
+import type { jokes } from "@prisma/client";
 
 import { db } from "~/utils/db.server";
 
-type LoaderData = { randomJoke: Joke };
+type LoaderData = { randomJoke: jokes };
 
 export const loader: LoaderFunction = async () => {
-  const count = await db.joke.count();
+  const count = await db.jokes.count();
   const randomRowNumber = Math.floor(Math.random() * count);
-  const [randomJoke] = await db.joke.findMany({
+  const [randomJoke] = await db.jokes.findMany({
     take: 1,
     skip: randomRowNumber,
   });

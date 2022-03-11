@@ -1,22 +1,9 @@
-import type {
-  LoaderFunction,
-  ActionFunction,
-  MetaFunction,
-} from "remix";
-import {
-  json,
-  useLoaderData,
-  useCatch,
-  redirect,
-  useParams,
-} from "remix";
-import type { Joke } from "@prisma/client";
+import type { LoaderFunction, ActionFunction, MetaFunction } from "remix";
+import { json, useLoaderData, useCatch, redirect, useParams } from "remix";
+import type { jokes } from "@prisma/client";
 
 import { db } from "~/utils/db.server";
-import {
-  getUserId,
-  requireUserId,
-} from "~/utils/session.server";
+import { getUserId, requireUserId } from "~/utils/session.server";
 import { JokeDisplay } from "~/components/joke";
 
 export const meta: MetaFunction = ({
@@ -36,15 +23,12 @@ export const meta: MetaFunction = ({
   };
 };
 
-type LoaderData = { joke: Joke; isOwner: boolean };
+type LoaderData = { joke: jokes; isOwner: boolean };
 
-export const loader: LoaderFunction = async ({
-  request,
-  params,
-}) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await getUserId(request);
 
-  const joke = await db.joke.findUnique({
+  const joke = await db.jokes.findUnique({
     where: { id: params.jokeId },
   });
   if (!joke) {
@@ -59,19 +43,15 @@ export const loader: LoaderFunction = async ({
   return json(data);
 };
 
-export const action: ActionFunction = async ({
-  request,
-  params,
-}) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   if (form.get("_method") !== "delete") {
-    throw new Response(
-      `The _method ${form.get("_method")} is not supported`,
-      { status: 400 }
-    );
+    throw new Response(`The _method ${form.get("_method")} is not supported`, {
+      status: 400,
+    });
   }
   const userId = await requireUserId(request);
-  const joke = await db.joke.findUnique({
+  const joke = await db.jokes.findUnique({
     where: { id: params.jokeId },
   });
   if (!joke) {
@@ -80,23 +60,18 @@ export const action: ActionFunction = async ({
     });
   }
   if (joke.jokesterId !== userId) {
-    throw new Response(
-      "Pssh, nice try. That's not your joke",
-      {
-        status: 401,
-      }
-    );
+    throw new Response("Pssh, nice try. That's not your joke", {
+      status: 401,
+    });
   }
-  await db.joke.delete({ where: { id: params.jokeId } });
+  await db.jokes.delete({ where: { id: params.jokeId } });
   return redirect("/jokes");
 };
 
 export default function JokeRoute() {
   const data = useLoaderData<LoaderData>();
 
-  return (
-    <JokeDisplay joke={data.joke} isOwner={data.isOwner} />
-  );
+  return <JokeDisplay joke={data.joke} isOwner={data.isOwner} />;
 }
 
 export function CatchBoundary() {

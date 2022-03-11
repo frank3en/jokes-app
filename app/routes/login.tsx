@@ -98,7 +98,7 @@ export const action: ActionFunction = async ({
       return createUserSession(user.id, redirectTo);
     }
     case "register": {
-      const userExists = await db.user.findFirst({
+      const userExists = await db.users.findFirst({
         where: { username },
       });
       if (userExists) {

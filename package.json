@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production remix build",
     "dev": "cross-env NODE_ENV=development remix dev",
-    "postinstall": "remix setup node && node --require esbuild-register prisma/seed.ts"
+    "postinstall": "remix setup node"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
